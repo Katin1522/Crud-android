@@ -17,8 +17,9 @@
     tools:ignore="MissingClass">
 
     <LinearLayout
+        android:id="@+id/txtCard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="69dp">
 
         <TextView
             android:id="@+id/txtCancion"

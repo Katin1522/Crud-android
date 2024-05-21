@@ -1,6 +1,8 @@
 package katherine.ceron.crudkatherine1b
 
 import Modelo.Conexion
+import Modelo.dataClassMusica
+import RecyclerViewHelpers.Adaptador
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -8,9 +10,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +34,44 @@ class MainActivity : AppCompatActivity() {
         val txtDuracion = findViewById<EditText>(R.id.txtDuracion)
         val txtAutor = findViewById<EditText>(R.id.txtAutor)
         val btnAgregar = findViewById<Button>(R.id.btnAgregar)
+
+        val rcvMusica = findViewById<RecyclerView>(R.id.rcvMusica)
+        //Asignarle un Layout al RecyclerView
+        rcvMusica.layoutManager = LinearLayoutManager(this)
+
+        /////////// TODO:mostrar datos
+
+        fun mostraDatos(): List<dataClassMusica> {
+            // 1- Crear un objeto de la clase conexion
+            val objConexion = Conexion().cadenaConexion()
+
+            //2- Creo un Statement
+            val statemt = objConexion?.createStatement()
+            val resultSet = statemt?.executeQuery("SELECT * FROM tbMusica")!!
+
+            // Voy a guardar todo lo que me traiga el select
+            val canciones = mutableListOf<dataClassMusica>()
+
+            while (resultSet.next()) {
+                val nombre = resultSet.getString("nombreCancion")
+                val cancion = dataClassMusica(nombre)
+                canciones.add(cancion)
+
+            }
+            return canciones
+        }
+
+        //Asigna el adapter al R ecycler View
+        //Ejecutar la funcion para mostrar datos
+
+        CoroutineScope(Dispatchers.IO).launch{
+            //Creo una variable que ejecute la funcion de mostrar Datos
+            val musicaDB = mostraDatos()
+            withContext(Dispatchers.Main){
+                val miAdaptador = Adaptador(musicaDB)
+                rcvMusica.adapter = miAdaptador
+            }
+        }
 
         //2-Programar el boton
         btnAgregar.setOnClickListener {
