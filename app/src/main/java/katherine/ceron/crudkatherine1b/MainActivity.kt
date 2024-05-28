@@ -87,6 +87,15 @@ class MainActivity : AppCompatActivity() {
                 addMusica.setInt(2,txtDuracion.text.toString().toInt())
                 addMusica.setString(3,txtAutor.text.toString())
                 addMusica.executeUpdate()
+
+                val nuevasCanciones = mostraDatos()
+                withContext(Dispatchers.Main){
+                    //Actualizo al adaptador con los datos nuevos
+                    (rcvMusica.adapter as? Adaptador)?.actualizarListado(nuevasCanciones)
+
+
+                    
+                }
             }
         }
     }

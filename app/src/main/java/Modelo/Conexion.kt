@@ -7,7 +7,7 @@ class Conexion {
 
     fun cadenaConexion(): Connection? {
         try {
-            val ip = "jdbc:oracle:thin:@ 10.10.0.79:1521:xe"
+            val ip = "jdbc:oracle:thin:@10.10.0.79:1521:xe"
             val usuario = "system"
             val contrasena = "desarrollo"
 
@@ -15,7 +15,7 @@ class Conexion {
             return conexion
 
         } catch (e: Exception){
-            println("Este es el error: $e")
+            println("Este es el error:$e")
             return null
         }
     }
